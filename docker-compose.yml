@@ -22,6 +22,8 @@ services:
       - ES_HOSTNAME=elasticsearch
     volumes:
       - public:/opt/zammad/public/
+      - zammad-images:/opt/zammad/public/assets/images
+      - zammad-data:/opt/zammad/storage
 
   proxy:
     image: computersciencehouse/zammad-proxy
@@ -81,5 +83,9 @@ services:
 
 volumes:
   public:
+  zammad-data:
+    driver: local
+  zammad-images:
+    driver: local
   zammad-elasticsearch:
     driver: local

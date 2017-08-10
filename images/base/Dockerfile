@@ -23,7 +23,12 @@ RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev libmysql
       && bundle exec rake assets:precompile \
       && rm -f config/database.yml \
       && rm -rf tmp/cache \
-      && chown -R ${ZAMMAD_USER}:${ZAMMAD_USER} ${ZAMMAD_DIR}
+      && mkdir -p ${ZAMMAD_DIR}/storage \
+      && chown -R ${ZAMMAD_USER}:${ZAMMAD_USER} ${ZAMMAD_DIR} \
+      && chmod -R og+rwx ${ZAMMAD_DIR}/log \
+      && chmod -R og+rwx ${ZAMMAD_DIR}/tmp \
+      && chmod -R og+rwx ${ZAMMAD_DIR}/storage \
+      && chmod og+rwx ${ZAMMAD_DIR}/public/assets/images
 
 COPY database.yml ${ZAMMAD_DIR}/config/
 WORKDIR ${ZAMMAD_DIR}

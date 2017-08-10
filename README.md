@@ -80,6 +80,17 @@ Exposes the Rails server (Puma, by default) on port `3000`.
 
 This container must share the `/opt/zammad/public` folder via a shared volume with the `proxy` container in order for the proxy to serve the compiled static assets. See `docker-compose.yml` for an example.
 
+## Persistence
+
+Three volumes are required for proper persistence:
+
+| Volume                 | Container       | Mount Point                        | Description        |
+|------------------------|-----------------|------------------------------------|--------------------|
+| `zammad-data`          | `zammad`        | `/opt/zammad/public/assets/images` | Branding images    |
+| `zammad-images`        | `zammad`        | `/opt/zammad/storage`              | Ticket attachments |
+| `zammad-elasticsearch` | `elasticsearch` | `/usr/share/elasticsearch/data`    | Elasticsearch data |
+
+See `docker-compose.yml` for an example.
 
 ## Differences
 
