@@ -1,0 +1,85 @@
+version: '3'
+
+services:
+  base:
+    image: computersciencehouse/zammad-base
+    build: ./images/base
+
+  zammad:
+    depends_on:
+      - base
+      - elasticsearch
+      - postgres
+    image: computersciencehouse/zammad
+    build: ./images/zammad
+    restart: always
+    environment:
+      - DB_ADAPTER=postgresql
+      - DB_HOSTNAME=postgres
+      - DB_NAME=zammad
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=thisisntverysecure
+      - ES_HOSTNAME=elasticsearch
+    volumes:
+      - public:/opt/zammad/public/
+
+  proxy:
+    image: computersciencehouse/zammad-proxy
+    build: ./images/proxy
+    depends_on:
+      - zammad
+    ports:
+      - 8080:8080
+    environment:
+      - ZAMMAD_HOSTNAME=zammad
+      - WEBSOCKETS_HOSTNAME=websockets
+    volumes:
+      - public:/opt/zammad/public/
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=thisisntverysecure
+
+  elasticsearch:
+    image: computersciencehouse/zammad-elasticsearch
+    build: ./images/elasticsearch
+    restart: always
+    volumes:
+      - zammad-elasticsearch:/usr/share/elasticsearch/data
+
+  scheduler:
+    depends_on:
+      - base
+      - zammad
+    image: computersciencehouse/zammad-scheduler
+    build: ./images/scheduler
+    restart: always
+    environment:
+      - ZAMMAD_HOSTNAME=zammad
+      - DB_ADAPTER=postgresql
+      - DB_HOSTNAME=postgres
+      - DB_NAME=zammad
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=thisisntverysecure
+
+  websockets:
+    depends_on:
+      - base
+      - zammad
+    image: computersciencehouse/zammad-websockets
+    build: ./images/websockets
+    restart: always
+    environment:
+      - ZAMMAD_HOSTNAME=zammad
+      - DB_ADAPTER=postgresql
+      - DB_HOSTNAME=postgres
+      - DB_NAME=zammad
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=thisisntverysecure
+
+volumes:
+  public:
+  zammad-elasticsearch:
+    driver: local

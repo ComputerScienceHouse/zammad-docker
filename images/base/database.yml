@@ -1,0 +1,10 @@
+production:
+  adapter: <%= ENV['DB_ADAPTER'] %>
+  host: <%= ENV['DB_HOSTNAME'] %>
+  port: <%= ENV['DB_PORT'] %>
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  pool: 50
+  timeout: 5000
+  encoding: utf8
