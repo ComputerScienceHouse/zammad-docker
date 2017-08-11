@@ -1,7 +1,7 @@
 server_tokens off;
 
 upstream zammad {
-    server ${ZAMMAD_HOSTNAME}:3000;
+    server 127.0.0.1:3000;
 }
 
 upstream websockets {
@@ -12,7 +12,7 @@ server {
   listen 8080;
   server_name _;
 
-  root /opt/zammad/public;
+  root ${ZAMMAD_DIR}/public;
   client_max_body_size 50M;
 
   location ~ ^/(assets/|robots.txt|humans.txt|favicon.ico) {

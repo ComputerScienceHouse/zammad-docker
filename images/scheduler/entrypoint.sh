@@ -1,5 +1,6 @@
 #!/bin/bash
 # Zammad Scheduler Entrypoint
+set -e
 
 if [ -n "$ZAMMAD_HOSTNAME" ]; then
   until (echo > "/dev/tcp/${ZAMMAD_HOSTNAME}/3000") &> /dev/null; do

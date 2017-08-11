@@ -13,6 +13,7 @@ RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev libmysql
   	  && apt-get update \
       && apt-get install -y --force-yes --no-install-recommends ${BUILD_DEPENDENCIES} \
       && apt-get clean \
+      && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
       && useradd -M -d ${ZAMMAD_DIR} ${ZAMMAD_USER} \
       && cd $(dirname ${ZAMMAD_DIR}) \
       && git clone --depth 1 -b "${GIT_BRANCH}" "${GIT_URL}" \
@@ -28,7 +29,7 @@ RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev libmysql
       && chmod -R og+rwx ${ZAMMAD_DIR}/log \
       && chmod -R og+rwx ${ZAMMAD_DIR}/tmp \
       && chmod -R og+rwx ${ZAMMAD_DIR}/storage \
-      && chmod og+rwx ${ZAMMAD_DIR}/public/assets/images
+      && chmod -R og+rwx ${ZAMMAD_DIR}/public/assets/images
 
 COPY database.yml ${ZAMMAD_DIR}/config/
 WORKDIR ${ZAMMAD_DIR}

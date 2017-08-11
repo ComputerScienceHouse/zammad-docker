@@ -13,6 +13,8 @@ services:
     image: computersciencehouse/zammad
     build: ./images/zammad
     restart: always
+    ports:
+      - 8080:8080
     environment:
       - DB_ADAPTER=postgresql
       - DB_HOSTNAME=postgres
@@ -20,23 +22,9 @@ services:
       - DB_USERNAME=postgres
       - DB_PASSWORD=thisisntverysecure
       - ES_HOSTNAME=elasticsearch
-    volumes:
-      - public:/opt/zammad/public/
-      - zammad-images:/opt/zammad/public/assets/images
-      - zammad-data:/opt/zammad/storage
-
-  proxy:
-    image: computersciencehouse/zammad-proxy
-    build: ./images/proxy
-    depends_on:
-      - zammad
-    ports:
-      - 8080:8080
-    environment:
-      - ZAMMAD_HOSTNAME=zammad
       - WEBSOCKETS_HOSTNAME=websockets
     volumes:
-      - public:/opt/zammad/public/
+      - zammad-data:/opt/zammad/storage
 
   postgres:
     image: postgres
@@ -84,8 +72,6 @@ services:
 volumes:
   public:
   zammad-data:
-    driver: local
-  zammad-images:
     driver: local
   zammad-elasticsearch:
     driver: local
