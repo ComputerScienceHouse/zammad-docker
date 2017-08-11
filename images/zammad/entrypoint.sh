@@ -47,11 +47,20 @@ until (echo > "/dev/tcp/${DB_HOSTNAME}/${DB_PORT}") &> /dev/null; do
   sleep 2
 done
 
-echo "--> Migrating database..."
-if ! bundle exec rake db:migrate; then
-  echo "--> Initializing database..."
+# Make sure the database exists
+if ! rails r 'ActiveRecord::Base.connection' &> /dev/null; then
+  echo "--> Creating database..."
   bundle exec rake db:create
-  bundle exec rake db:migrate
+fi
+
+# Check to see if the database needs to be seeded
+EXISTING_DB=$(rails r 'puts ActiveRecord::Base.connection.tables.include? "schema_migrations"')
+
+echo "--> Migrating database..."
+bundle exec rake db:migrate
+
+if [ "${EXISTING_DB}" == "false" ]; then
+  echo "--> Seeding database..."
   bundle exec rake db:seed
 fi
 
