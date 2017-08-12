@@ -1,0 +1,4 @@
+rails: bundle exec puma -b tcp://0.0.0.0:3000 -e "${RAILS_ENV}"
+scheduler: bundle exec script/scheduler.rb run
+websockets: bundle exec script/websocket-server.rb -b 0.0.0.0 start
+proxy: nginx

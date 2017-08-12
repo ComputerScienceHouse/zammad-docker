@@ -1,2 +1,0 @@
-rails: bundle exec puma -b tcp://0.0.0.0:3000 -e "${RAILS_ENV}"
-proxy: nginx

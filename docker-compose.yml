@@ -1,13 +1,8 @@
 version: '3'
 
 services:
-  base:
-    image: computersciencehouse/zammad-base
-    build: ./images/base
-
   zammad:
     depends_on:
-      - base
       - elasticsearch
       - postgres
     image: computersciencehouse/zammad
@@ -22,7 +17,6 @@ services:
       - DB_USERNAME=postgres
       - DB_PASSWORD=thisisntverysecure
       - ES_HOSTNAME=elasticsearch
-      - WEBSOCKETS_HOSTNAME=websockets
     volumes:
       - zammad-data:/opt/zammad/storage
 
@@ -38,36 +32,6 @@ services:
     restart: always
     volumes:
       - zammad-elasticsearch:/usr/share/elasticsearch/data
-
-  scheduler:
-    depends_on:
-      - base
-      - zammad
-    image: computersciencehouse/zammad-scheduler
-    build: ./images/scheduler
-    restart: always
-    environment:
-      - ZAMMAD_HOSTNAME=zammad
-      - DB_ADAPTER=postgresql
-      - DB_HOSTNAME=postgres
-      - DB_NAME=zammad
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=thisisntverysecure
-
-  websockets:
-    depends_on:
-      - base
-      - zammad
-    image: computersciencehouse/zammad-websockets
-    build: ./images/websockets
-    restart: always
-    environment:
-      - ZAMMAD_HOSTNAME=zammad
-      - DB_ADAPTER=postgresql
-      - DB_HOSTNAME=postgres
-      - DB_NAME=zammad
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=thisisntverysecure
 
 volumes:
   public:

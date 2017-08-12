@@ -4,13 +4,10 @@ Docker images for the [Zammad](https://zammad.org) open source helpdesk/customer
 
 ## Contents
 
-This repository contains the build contexts for 6 images:
+This repository contains the build contexts for 2 images:
 
-* [base](https://hub.docker.com/computersciencehouse/zammad-base) - Base image for the Zammad application images
 * [elasticsearch](https://hub.docker.com/computersciencehouse/zammad-elasticsearch) - Customized Elasticsearch image
-* [scheduler](https://hub.docker.com/computersciencehouse/zammad-scheduler) - Zammad Scheduler
-* [websockets](https://hub.docker.com/computersciencehouse/zammad-websockets) - Zammad Websockets server
-* [zammad](https://hub.docker.com/computersciencehouse/zammad) - Zammad main application
+* [zammad](https://hub.docker.com/computersciencehouse/zammad) - Main Zammad application and scheduler
 
 The included `docker-compose.yml` will orchestrate these containers into a fully functioning instance of Zammad.
 
@@ -22,9 +19,9 @@ See [Elastic's documentation](https://www.elastic.co/guide/en/elasticsearch/refe
 
 Exposes Elasticsearch on port `9200`.
 
-#### Common
+#### zammad
 
-The `zammad`, `scheduler`, and `websockets` containers can be configured with the following environment variables:
+The `zammad` container can be configured with the following environment variables:
 
 | Variable      | Description                                                          | Required |
 |---------------|----------------------------------------------------------------------|----------|
@@ -34,36 +31,10 @@ The `zammad`, `scheduler`, and `websockets` containers can be configured with th
 | `DB_NAME`     | Name of the database                                                 | Yes      |
 | `DB_USERNAME` | Username for the database user                                       | Yes      |
 | `DB_PASSWORD` | Password for the database user                                       | No       |
+| `ES_HOSTNAME` | Hostname of the `elasticsearch` container or external server         | Yes      |
+| `ES_PORT`     | Port number of the Elasticsearch server (default: `9200`)            | Yes      |
 
-#### scheduler
-
-The `scheduler` container can be configured with the following environment variables, in addition to the above:
-
-| Variable              | Description                            | Required |
-|-----------------------|----------------------------------------|----------|
-| `ZAMMAD_HOSTNAME`     | Hostname of the `zammad` container     | Yes      |
-
-#### websockets
-
-The `websockets` container can be configured with the following environment variables, in addition to the above:
-
-| Variable              | Description                            | Required |
-|-----------------------|----------------------------------------|----------|
-| `ZAMMAD_HOSTNAME`     | Hostname of the `zammad` container     | Yes      |
-
-Exposes the Websockets server on port `6042`.
-
-#### zammad
-
-The `zammad` container can be configured with the following environment variables, in addition to the above:
-
-| Variable              | Description                                                  | Required |
-|-----------------------|--------------------------------------------------------------|----------|
-| `ES_HOSTNAME`         | Hostname of the `elasticsearch` container or external server | Yes      |
-| `ES_PORT`             | Port number of the Elasticsearch server (default: `9200`)    | Yes      |
-| `WEBSOCKETS_HOSTNAME` | Hostname of the `websockets` container                       | Yes      |
-
-Exposes the Rails server (Puma, by default) on port `3000` and Nginx on port `8080`.
+Exposes Nginx on port `8080`. Internally, the Rails server (Puma) and the websockets server run on ports `3000` and `6042`, respectively.
 
 ## Persistence
 
@@ -82,7 +53,6 @@ This repository is different from the [official images](https://github.com/zamma
 
 * Hostnames and database/Elasticsearch connections are configured through environment variables (which also makes using external services easy)
 * Both MySQL and PostgreSQL are supported
-* The application is not tied to a local volume and is only updated when the `base` container is rebuilt
-* Only the relevant data (i.e. the `/public` folder) is shared between the necessary containers
+* The application is not tied to a local volume and is only updated when the container is rebuilt
 * Containers run as nonroot users off the bat instead of invoking gosu
 * Permissions are handled for PaaS environments
