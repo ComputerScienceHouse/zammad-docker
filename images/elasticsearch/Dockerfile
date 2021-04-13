@@ -6,4 +6,5 @@ RUN set -ex \
       && yes | /usr/share/elasticsearch/bin/elasticsearch-plugin install mapper-attachments \
       && find /usr/share/elasticsearch -type d -exec chmod og+rwx {} \; \
       && find /usr/share/elasticsearch -type f -exec chmod +r {} \; \
-      && chmod +x /usr/share/elasticsearch/bin/*
+      && chmod +x /usr/share/elasticsearch/bin/* \
+      && sudo sysctl -w vm.max_map_count=262144
