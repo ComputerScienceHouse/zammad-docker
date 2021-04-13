@@ -1,3 +1,7 @@
+## DEPRECATED
+
+The issues this container was intended to solve have been addressed in the official images. Please consider using the [offical images](https://github.com/zammad/zammad-docker-compose) instead.
+
 # Zammad Docker
 
 Docker images for the [Zammad](https://zammad.org) open source helpdesk/customer support system. Inspired by the [official images](https://github.com/zammad/zammad-docker-compose).
